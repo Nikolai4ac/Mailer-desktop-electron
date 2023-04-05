@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MailerTest</title>
+    <link rel="stylesheet" href="../public/css/indexstyles.css">
+
+  </head>
+  <body>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <form action="/send-email-data" id="modalForm" method="POST">
+              <label>Subject: </label><br>
+              <input type="text" name="subject" id="subject"></input><br><br><br>
+              <label>Your message: </label><br>
+              <textarea rows="8" cols="50" name="message" form="modalForm" id="msgbox"></textarea>
+              <button id="submitButton" type="submit">SEND</button>
+          </form>
+      </div>
+    </div>
+      <div id="content-holder">
+        <form action="/create-list" id="sender" method="POST">
+          <input type="email" name="email"  placeholder="example@domain" id="email" required></input><br>
+          <input type="text" name="fname"  placeholder="First name" id="fname" required> </input><br>
+          <input type="text" name="lname" placeholder="Last name" id="lname" required> </input><br>
+          <button type="submit" id="add-email">ADD RECEIVER</button>
+        </form>
+      </div>
+      <div id="grid-layout-ejs">
+        <form action="/request-email-sending" method="POST" onsubmit="stay()">
+        <table>
+            <thead>
+              <tr>
+                <script>
+                    function checkAll(box) {
+                    checkBoxes = document.getElementsByName('checkboxthing');
+                    for (let i = 0, n = checkBoxes.length; i < n; i++) {
+                            checkBoxes[i].checked = box.checked;
+                        }
+                    }
+                    function stay() {
+                      event.preventDefault();
+                    }
+                </script>
+                <th id="select-all"><input type="checkbox" name="checkboxthing" onclick="checkAll(this)"></input></th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="tblrow">
+                <% if (userData.length != 0) { %>
+                  <% userData.forEach(function(data) { %>
+                    <tr>
+                      <td><input type="checkbox" name="checkboxthing" id="check" class="checkboxes"></input></td>
+                      <td name="fnameData"><%= data.first_name %></td>
+                      <td name="lnameData"><%= data.last_name %></td>
+                      <td name="emailData"><%= data.email %></td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="7">No Data Found</td>
+                  </tr>
+                <% } %>
+              </tbody>
+          </table>
+          <script type="application/javascript" src="../public/js/modalform.js"></script>
+          <script type="application/javascript" src="../public/js/deletedata.js"></script>
+          <script type="application/javascript" src="../public/js/checkAll.js"></script>
+          <button id="send-mail-btn" onclick="execute(), logInfo()">SEND EMAIL</button>
+          <button id="deleteButton" onclick="deleteUser(event)">DELETE DATA</button>
+
+        </form>
+      </div>
+
+  </body>
+</html>
